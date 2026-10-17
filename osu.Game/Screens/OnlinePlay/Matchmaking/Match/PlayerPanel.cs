@@ -241,7 +241,7 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.Match
                                         Alpha = 0,
                                         Anchor = Anchor.BottomCentre,
                                         Origin = Anchor.BottomCentre,
-                                        Text = User.Username,
+                                        Text = LocalUserAlias.GetDisplayUsername(User),
                                         Font = OsuFont.Style.Heading1,
                                         MaxWidth = 120
                                     },

@@ -27,6 +27,7 @@ using osu.Game.Overlays;
 using osu.Game.Rulesets.UI;
 using osu.Game.Screens.Select;
 using osu.Game.Scoring;
+using osu.Game.Users;
 using osu.Game.Users.Drawables;
 using osuTK;
 using osuTK.Graphics;
@@ -170,7 +171,7 @@ namespace osu.Game.Online.Leaderboards
                                     {
                                         nameLabel = new OsuSpriteText
                                         {
-                                            Text = user.Username,
+                                            Text = LocalUserAlias.GetDisplayUsername(user),
                                             Font = OsuFont.GetFont(size: 23, weight: FontWeight.Bold, italics: true)
                                         },
                                         new FillFlowContainer

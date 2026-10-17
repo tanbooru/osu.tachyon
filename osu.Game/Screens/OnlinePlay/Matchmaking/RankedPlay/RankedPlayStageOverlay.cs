@@ -13,6 +13,7 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
+using osu.Game.Users;
 using osu.Game.Users.Drawables;
 using osuTK;
 
@@ -142,7 +143,7 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.RankedPlay
                             Origin = Anchor.CentreLeft,
                             UseFullGlyphHeight = false,
                             Font = OsuFont.Torus.With(size: 32),
-                            Text = $"{PickingUser.Username}'s pick",
+                            Text = $"{LocalUserAlias.GetDisplayUsername(PickingUser)}'s pick",
                             Colour = colourScheme.Primary,
                         },
                     },

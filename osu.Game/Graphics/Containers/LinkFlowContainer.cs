@@ -83,7 +83,7 @@ namespace osu.Game.Graphics.Containers
         }
 
         public void AddUserLink(IUser user, Action<SpriteText> creationParameters = null)
-            => createLink(CreateChunkFor(user.Username, true, CreateSpriteText, creationParameters), new LinkDetails(LinkAction.OpenUserProfile, user), ContextMenuStrings.ViewProfile);
+            => createLink(CreateChunkFor(LocalUserAlias.GetDisplayUsername(user), true, CreateSpriteText, creationParameters), new LinkDetails(LinkAction.OpenUserProfile, user), ContextMenuStrings.ViewProfile);
 
         private void createLink(ITextPart textPart, LinkDetails link, LocalisableString tooltipText, Action action = null)
         {

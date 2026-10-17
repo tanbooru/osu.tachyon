@@ -242,7 +242,7 @@ namespace osu.Game.Screens.Play.HUD
                                                 {
                                                     Anchor = Anchor.BottomLeft,
                                                     Origin = Anchor.BottomLeft,
-                                                    Text = User?.Username ?? string.Empty,
+                                                    Text = LocalUserAlias.GetDisplayUsername(User),
                                                     Font = OsuFont.Style.Caption1.With(weight: FontWeight.SemiBold),
                                                     RelativeSizeAxes = Axes.X,
                                                 },

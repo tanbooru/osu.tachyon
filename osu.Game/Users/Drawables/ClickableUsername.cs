@@ -31,11 +31,11 @@ namespace osu.Game.Users.Drawables
 
             Child = new OsuSpriteText
             {
-                Text = user!.Username,
+                Text = LocalUserAlias.GetDisplayUsername(this.user),
                 Font = OsuFont.Torus.With(size: 16, weight: FontWeight.SemiBold),
             };
 
-            if (user.Id != APIUser.SYSTEM_USER_ID)
+            if (this.user.Id != APIUser.SYSTEM_USER_ID)
                 Action = openProfile;
         }
 

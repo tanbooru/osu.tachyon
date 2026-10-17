@@ -180,7 +180,7 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.Queue
                                                 {
                                                     Anchor = Anchor.CentreLeft,
                                                     Origin = Anchor.CentreLeft,
-                                                    Text = leftUser.GetResultSafely()?.Username ?? "Unknown",
+                                                    Text = leftUser.GetResultSafely() is APIUser left ? LocalUserAlias.GetDisplayUsername(left) : "Unknown",
                                                     Font = OsuFont.GetFont(weight: FontWeight.SemiBold),
                                                     UseFullGlyphHeight = false,
                                                 },
@@ -211,7 +211,7 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.Queue
                                                 {
                                                     Anchor = Anchor.CentreRight,
                                                     Origin = Anchor.CentreRight,
-                                                    Text = rightUser.GetResultSafely()?.Username ?? "Unknown",
+                                                    Text = rightUser.GetResultSafely() is APIUser right ? LocalUserAlias.GetDisplayUsername(right) : "Unknown",
                                                     Font = OsuFont.GetFont(weight: FontWeight.SemiBold),
                                                     UseFullGlyphHeight = false,
                                                 },

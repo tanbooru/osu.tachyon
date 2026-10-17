@@ -20,6 +20,7 @@ using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
+using osu.Game.Users;
 using osuTK;
 using osuTK.Graphics;
 
@@ -298,7 +299,7 @@ namespace osu.Game.Overlays.Chat
                 drawableTimestamp.Hide();
             }
 
-            drawableUsername.Text = $@"{message.Sender.Username}";
+            drawableUsername.Text = LocalUserAlias.GetDisplayUsername(message.Sender);
 
             // remove non-existent channels from the link list
             message.Links.RemoveAll(link => link.Action == LinkAction.OpenChannel && channelManager?.AvailableChannels.Any(c => c.Name == link.Argument.ToString()) != true);

@@ -14,6 +14,7 @@ using osu.Game.Rulesets.Replays.Types;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Ranking;
+using osu.Game.Users;
 
 namespace osu.Game.Screens.Play
 {
@@ -44,7 +45,7 @@ namespace osu.Game.Screens.Play
                 // Or maybe we should completely redesign this to show the user avatar and other things if that happens.
                 OsuTextFlowContainer message = new OsuTextFlowContainer(cp => cp.Font = OsuFont.Style.Body) { AutoSizeAxes = Axes.Both };
                 message.AddText("Watching ");
-                message.AddText(Score.ScoreInfo.User.Username, s => s.Font = s.Font.With(weight: FontWeight.SemiBold));
+                message.AddText(LocalUserAlias.GetDisplayUsername(Score.ScoreInfo.User), s => s.Font = s.Font.With(weight: FontWeight.SemiBold));
                 message.AddText(" play ");
                 message.AddText(Beatmap.Value.BeatmapInfo.GetDisplayTitleRomanisable(), s => s.Font = s.Font.With(weight: FontWeight.SemiBold));
                 message.AddText(" live", s => s.Font = s.Font.With(weight: FontWeight.Bold));

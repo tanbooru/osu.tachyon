@@ -277,7 +277,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Participants
                 {
                     Size = new Vector2(40, 20),
                 };
-                username.Text = user?.Username ?? string.Empty;
+                username.Text = LocalUserAlias.GetDisplayUsername(user);
             }
 
             updateState();

@@ -14,6 +14,7 @@ using osu.Framework.Graphics.Transforms;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Users;
 using osu.Game.Users.Drawables;
 using osuTK;
 using osuTK.Graphics;
@@ -244,7 +245,7 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.RankedPlay.Intro
                                 },
                                 new OsuSpriteText
                                 {
-                                    Text = user.User.Username,
+                                    Text = LocalUserAlias.GetDisplayUsername(user.User),
                                     Font = OsuFont.Style.Title.With(size: 40, weight: FontWeight.SemiBold),
                                     Anchor = contentAnchor,
                                     Origin = contentAnchor,

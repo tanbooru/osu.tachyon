@@ -19,6 +19,7 @@ using osu.Game.Online.Chat;
 using osu.Game.Online.Multiplayer;
 using osu.Game.Online.Spectator;
 using osu.Game.Skinning;
+using osu.Game.Users;
 using osuTK;
 using osuTK.Graphics;
 
@@ -279,7 +280,7 @@ namespace osu.Game.Screens.Play.HUD
 
             private void updateState()
             {
-                username.Text = Current.Value.Username;
+                username.Text = LocalUserAlias.GetDisplayUsername(Current.Value);
                 linkCompiler?.Expire();
                 AddInternal(linkCompiler = new DrawableLinkCompiler([username])
                 {

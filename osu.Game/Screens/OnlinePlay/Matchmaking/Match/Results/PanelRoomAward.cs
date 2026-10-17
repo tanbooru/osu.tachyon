@@ -16,6 +16,7 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
+using osu.Game.Users;
 using osuTK;
 
 namespace osu.Game.Screens.OnlinePlay.Matchmaking.Match.Results
@@ -86,7 +87,7 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.Match.Results
                                     new OsuSpriteText
                                     {
                                         Font = OsuFont.Style.Caption1,
-                                        Text = user.Username
+                                        Text = LocalUserAlias.GetDisplayUsername(user)
                                     },
                                     new OsuSpriteText
                                     {

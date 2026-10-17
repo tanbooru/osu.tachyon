@@ -198,7 +198,7 @@ namespace osu.Game.Screens.RankingV2.Argon
                                .ContinueWith(t => Schedule(() => setAPIUser(t.IsCompletedSuccessfully ? t.GetResultSafely() : null)));
             }
 
-            usernameText.Text = score.Value.User.Username;
+            usernameText.Text = LocalUserAlias.GetDisplayUsername(score.Value.User);
             achievedOnText.Text = ResultsScreenStrings.AchievedOnDate(score.Value.Date);
         }
 

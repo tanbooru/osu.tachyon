@@ -14,6 +14,7 @@ using osu.Game.Screens.Play;
 using osu.Game.Screens.Play.Leaderboards;
 using osu.Game.Screens.Ranking;
 using FontWeight = osu.Game.Graphics.FontWeight;
+using osu.Game.Users;
 using OsuFont = osu.Game.Graphics.OsuFont;
 
 namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
@@ -69,7 +70,7 @@ namespace osu.Game.Screens.OnlinePlay.Multiplayer.Spectate
                 Anchor = Anchor.TopCentre,
                 Origin = Anchor.TopCentre,
                 AutoSizeAxes = Axes.Both,
-                Text = Score.ScoreInfo.User.Username,
+                Text = LocalUserAlias.GetDisplayUsername(Score.ScoreInfo.User),
                 Y = 50,
             });
         }

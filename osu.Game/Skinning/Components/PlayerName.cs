@@ -10,6 +10,7 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Screens.Play;
+using osu.Game.Users;
 
 namespace osu.Game.Skinning.Components
 {
@@ -44,11 +45,11 @@ namespace osu.Game.Skinning.Components
         private void load()
         {
             if (gameplayState != null)
-                text.Text = gameplayState.Score.ScoreInfo.User.Username;
+                text.Text = LocalUserAlias.GetDisplayUsername(gameplayState.Score.ScoreInfo.User);
             else
             {
                 apiUser = api.LocalUser.GetBoundCopy();
-                apiUser.BindValueChanged(u => text.Text = u.NewValue.Username, true);
+                apiUser.BindValueChanged(u => text.Text = LocalUserAlias.GetDisplayUsername(u.NewValue), true);
             }
         }
 

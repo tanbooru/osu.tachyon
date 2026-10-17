@@ -302,7 +302,7 @@ namespace osu.Game.Screens.Select
                                                     {
                                                         RelativeSizeAxes = Axes.X,
                                                         Shear = sheared ? -OsuGame.SHEAR : Vector2.Zero,
-                                                        Text = Score.User.Username,
+                                                        Text = LocalUserAlias.GetDisplayUsername(Score.User),
                                                         Font = OsuFont.Style.Heading2,
                                                     }
                                                 }
