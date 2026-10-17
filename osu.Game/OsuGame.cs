@@ -1462,6 +1462,9 @@ namespace osu.Game
             if (entry.Exception is SentryOnlyDiagnosticsException)
                 return;
 
+            if (entry.Message.Contains(@"is not supported on this version of the game", StringComparison.OrdinalIgnoreCase))
+                return;
+
             const int short_term_display_limit = 3;
 
             if (generalLogRecentCount < short_term_display_limit)
