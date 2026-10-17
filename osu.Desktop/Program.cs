@@ -18,11 +18,10 @@ namespace osu.Desktop
 {
     public static class Program
     {
-        // Distinct from official osu! so this build keeps its own data folder and single-instance lock, allowing both to be installed and run side by side.
 #if DEBUG
-        private const string base_game_name = @"osu-tachyon-development";
+        private const string base_game_name = @"osu-development";
 #else
-        private const string base_game_name = @"osu-tachyon";
+        private const string base_game_name = @"osu";
 #endif
 
         private static LegacyTcpIpcProvider? legacyIpc;
@@ -103,7 +102,7 @@ namespace osu.Desktop
 
             var hostOptions = new HostOptions
             {
-                IPCPipeName = !tournamentClient ? base_game_name : null,
+                IPCPipeName = !tournamentClient ? $"{OsuGame.IPC_PIPE_NAME}-tachyon" : null,
                 FriendlyGameName = OsuGameBase.GAME_NAME,
             };
 
@@ -201,9 +200,6 @@ namespace osu.Desktop
             var app = VelopackApp.Build();
 
             app.OnFirstRun(_ => isFirstRun = true);
-
-            // File (.osz, .osk, ...) and osu:// link associations are intentionally not registered (or removed on uninstall),
-            // as they belong to the official osu! install which this build runs alongside.
 
             app.Run();
         }
