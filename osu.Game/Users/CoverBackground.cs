@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
+using osu.Game.Online.API;
 using osuTK.Graphics;
 
 namespace osu.Game.Users
@@ -50,9 +51,11 @@ namespace osu.Game.Users
             }
 
             [BackgroundDependencyLoader]
-            private void load(OnlineAssetCachingStore textures)
+            private void load(OnlineAssetCachingStore textures, IAPIProvider api)
             {
-                if (cover?.CoverUrl == null)
+                var displayCover = cover is IUser user ? LocalUserAlias.GetDisplayUser(user, api) as IHasCover : cover;
+
+                if (displayCover?.CoverUrl == null)
                 {
                     InternalChild = new Box
                     {
@@ -65,7 +68,7 @@ namespace osu.Game.Users
                     InternalChild = new Sprite
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Texture = textures.Get(cover.CoverUrl),
+                        Texture = textures.Get(displayCover.CoverUrl),
                         FillMode = FillMode.Fill,
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre

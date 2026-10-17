@@ -24,7 +24,7 @@ namespace osu.Game.Users
 
         public static IUser GetProfileUser(IUser user) => AppliesTo(user) ? new APIUser { Id = 0, Username = DISPLAY_USERNAME } : user;
 
-        public static IUser? GetAvatarUser(IUser? user, IAPIProvider? api)
+        public static IUser? GetDisplayUser(IUser? user, IAPIProvider? api)
         {
             if (!AppliesTo(user))
                 return user;

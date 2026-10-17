@@ -13,6 +13,7 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Transforms;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Users;
 using osu.Game.Users.Drawables;
@@ -268,14 +269,14 @@ namespace osu.Game.Screens.OnlinePlay.Matchmaking.RankedPlay.Intro
             }
 
             [BackgroundDependencyLoader]
-            private void load(LargeTextureStore textures)
+            private void load(LargeTextureStore textures, IAPIProvider api)
             {
                 Masking = true;
 
                 AddInternal(new Sprite
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Texture = textures.Get(user.CoverUrl),
+                    Texture = textures.Get((LocalUserAlias.GetDisplayUser(user, api) as APIUser)?.CoverUrl),
                     FillMode = FillMode.Fill,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,

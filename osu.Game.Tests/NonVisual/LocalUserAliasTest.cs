@@ -37,7 +37,7 @@ namespace osu.Game.Tests.NonVisual
         [Test]
         public void TestAvatarUser()
         {
-            var anny = new APIUser { Id = 2002, Username = "anny" };
+            var anny = new APIUser { Id = 2002, Username = "anny", CoverUrl = "https://assets.ppy.sh/user-cover-presets/1/anny.jpg" };
             var api = new DummyAPIAccess();
 
             api.HandleRequest = request =>
@@ -51,8 +51,9 @@ namespace osu.Game.Tests.NonVisual
                 return false;
             };
 
-            Assert.That(LocalUserAlias.GetAvatarUser(other, api), Is.SameAs(other));
-            Assert.That(LocalUserAlias.GetAvatarUser(account, api), Is.SameAs(anny));
+            Assert.That(LocalUserAlias.GetDisplayUser(other, api), Is.SameAs(other));
+            Assert.That(LocalUserAlias.GetDisplayUser(account, api), Is.SameAs(anny));
+            Assert.That(((IHasCover)LocalUserAlias.GetDisplayUser(account, api)!).CoverUrl, Is.EqualTo(anny.CoverUrl));
         }
     }
 }

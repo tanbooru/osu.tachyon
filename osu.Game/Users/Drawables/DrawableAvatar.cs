@@ -35,7 +35,7 @@ namespace osu.Game.Users.Drawables
         [BackgroundDependencyLoader]
         private void load(LargeTextureStore textures, OnlineAssetCachingStore onlineTextures, IAPIProvider api)
         {
-            var avatarUser = LocalUserAlias.GetAvatarUser(user, api);
+            var avatarUser = LocalUserAlias.GetDisplayUser(user, api);
 
             if (avatarUser != null && avatarUser.OnlineID > 1)
                 // TODO: The fallback here should not need to exist. Users should be looked up and populated via UserLookupCache or otherwise
