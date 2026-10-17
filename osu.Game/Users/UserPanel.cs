@@ -132,7 +132,7 @@ namespace osu.Game.Users
         {
             Font = OsuFont.GetFont(size: 16, weight: FontWeight.Bold),
             Shadow = false,
-            Text = User.Username,
+            Text = LocalUserAlias.GetDisplayUsername(User),
         };
 
         protected OsuSpriteText CreateRank() => new OsuSpriteText

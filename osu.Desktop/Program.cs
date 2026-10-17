@@ -3,9 +3,7 @@
 
 using System;
 using System.IO;
-using System.Runtime.Versioning;
 using osu.Desktop.LegacyIpc;
-using osu.Desktop.Windows;
 using osu.Framework;
 using osu.Framework.Development;
 using osu.Framework.Logging;
@@ -20,10 +18,11 @@ namespace osu.Desktop
 {
     public static class Program
     {
+        // Distinct from official osu! so this build keeps its own data folder and single-instance lock, allowing both to be installed and run side by side.
 #if DEBUG
-        private const string base_game_name = @"osu-development";
+        private const string base_game_name = @"osu-tachyon-development";
 #else
-        private const string base_game_name = @"osu";
+        private const string base_game_name = @"osu-tachyon";
 #endif
 
         private static LegacyTcpIpcProvider? legacyIpc;
@@ -104,7 +103,7 @@ namespace osu.Desktop
 
             var hostOptions = new HostOptions
             {
-                IPCPipeName = !tournamentClient ? OsuGame.IPC_PIPE_NAME : null,
+                IPCPipeName = !tournamentClient ? base_game_name : null,
                 FriendlyGameName = OsuGameBase.GAME_NAME,
             };
 
@@ -203,18 +202,10 @@ namespace osu.Desktop
 
             app.OnFirstRun(_ => isFirstRun = true);
 
-            if (OperatingSystem.IsWindows())
-                configureWindows(app);
+            // File (.osz, .osk, ...) and osu:// link associations are intentionally not registered (or removed on uninstall),
+            // as they belong to the official osu! install which this build runs alongside.
 
             app.Run();
-        }
-
-        [SupportedOSPlatform("windows")]
-        private static void configureWindows(VelopackApp app)
-        {
-            app.OnFirstRun(_ => WindowsAssociationManager.InstallAssociations());
-            app.OnAfterUpdateFastCallback(_ => WindowsAssociationManager.UpdateAssociations());
-            app.OnBeforeUninstallFastCallback(_ => WindowsAssociationManager.UninstallAssociations());
         }
     }
 }

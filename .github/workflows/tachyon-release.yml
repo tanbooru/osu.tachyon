@@ -1,0 +1,97 @@
+# Builds installable osu.tachyon packages and publishes them as a GitHub release of this fork.
+# Installed clients auto-update from these releases (see osu.Desktop/Updater/VelopackUpdateManager.cs).
+#
+# Upgrading to a new upstream osu! version: press "Sync fork" on GitHub. The resulting push to master runs this workflow.
+#
+# The package ID differs from official osu! ("osulazer"), so it installs into its own folder alongside it.
+name: Release osu.tachyon
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tachyon-release
+  cancel-in-progress: false
+
+env:
+  PACK_ID: osu.tachyon
+  PACK_TITLE: osu.tachyon
+  VPK_VERSION: 1.2.0
+
+jobs:
+  version:
+    name: Determine version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Compute version
+        id: version
+        run: echo "version=$(date -u +%Y.%-m%d).${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+  windows:
+    name: Windows
+    needs: version
+    runs-on: windows-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install .NET 10.0.x
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install vpk
+        run: dotnet tool install -g vpk --version "$VPK_VERSION"
+
+      - name: Publish
+        run: dotnet publish osu.Desktop/osu.Desktop.csproj -c Release -r win-x64 --self-contained -o publish /p:Version="$VERSION" /p:FileVersion="$VERSION"
+
+      - name: Pack
+        run: |
+          vpk download github --repoUrl "https://github.com/${{ github.repository }}" --token "${{ secrets.GITHUB_TOKEN }}" -o releases || true
+          vpk pack --packId "$PACK_ID" --packTitle "$PACK_TITLE" --packVersion "$VERSION" --packDir publish --mainExe "osu!.exe" --icon osu.Desktop/lazer.ico -o releases
+
+      # The "tachyon-" prefix keeps the tag from matching upstream's tag-triggered deploy workflow.
+      - name: Upload
+        run: vpk upload github --repoUrl "https://github.com/${{ github.repository }}" --token "${{ secrets.GITHUB_TOKEN }}" -o releases --publish --releaseName "osu.tachyon $VERSION" --tag "tachyon-$VERSION"
+
+  linux:
+    name: Linux
+    needs: [ version, windows ]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install .NET 10.0.x
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install vpk
+        run: dotnet tool install -g vpk --version "$VPK_VERSION"
+
+      - name: Publish
+        run: dotnet publish osu.Desktop/osu.Desktop.csproj -c Release -r linux-x64 --self-contained -o publish /p:Version="$VERSION" /p:FileVersion="$VERSION"
+
+      - name: Pack
+        run: |
+          vpk download github --repoUrl "https://github.com/${{ github.repository }}" --token "${{ secrets.GITHUB_TOKEN }}" -o releases || true
+          vpk pack --packId "$PACK_ID" --packTitle "$PACK_TITLE" --packVersion "$VERSION" --packDir publish --mainExe "osu!" --icon assets/lazer.png -o releases
+
+      - name: Upload
+        run: vpk upload github --repoUrl "https://github.com/${{ github.repository }}" --token "${{ secrets.GITHUB_TOKEN }}" -o releases --publish --merge --releaseName "osu.tachyon $VERSION" --tag "tachyon-$VERSION"

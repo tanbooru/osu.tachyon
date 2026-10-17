@@ -15,6 +15,7 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Localisation;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
+using osu.Game.Users;
 using osu.Game.Users.Drawables;
 using osuTK;
 using osuTK.Graphics;
@@ -106,7 +107,7 @@ namespace osu.Game.Overlays.Toolbar
 
         private void userChanged(ValueChangedEvent<APIUser> user) => Schedule(() =>
         {
-            usernameText.Text = user.NewValue.Username;
+            usernameText.Text = LocalUserAlias.GetDisplayUsername(user.NewValue);
             avatar.User = user.NewValue;
         });
 
