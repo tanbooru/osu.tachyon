@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Logging;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Online.API.Requests.Responses;
@@ -20,6 +21,10 @@ namespace osu.Game.Users
 
         private static APIUser? displayUser;
 
+        private static readonly TimeSpan lookup_retry_delay = TimeSpan.FromSeconds(5);
+
+        private static DateTimeOffset lastLookupFailure = DateTimeOffset.MinValue;
+
         private static readonly Dictionary<string, UserStatistics> display_statistics = new Dictionary<string, UserStatistics>();
 
         private static readonly HashSet<string> pending_statistics = new HashSet<string>();
@@ -33,7 +38,7 @@ namespace osu.Game.Users
                 if (display_statistics.TryGetValue(ruleset.ShortName, out var cached))
                     return cached;
 
-                if (api.State.Value != APIState.Online || !pending_statistics.Add(ruleset.ShortName))
+                if (!api.IsLoggedIn || !pending_statistics.Add(ruleset.ShortName))
                     return null;
             }
 
@@ -47,15 +52,19 @@ namespace osu.Game.Users
 
                     if (user.Statistics != null)
                         display_statistics[ruleset.ShortName] = user.Statistics;
+
+                    displayUser ??= user;
                 }
 
                 DisplayStatisticsLoaded?.Invoke();
             };
 
-            request.Failure += _ =>
+            request.Failure += e =>
             {
                 lock (display_user_lock)
                     pending_statistics.Remove(ruleset.ShortName);
+
+                Logger.Log($"Looking up {DISPLAY_USERNAME} statistics for {ruleset.ShortName} failed: {e.Message}", LoggingTarget.Network);
             };
 
             api.Queue(request);
@@ -84,7 +93,7 @@ namespace osu.Game.Users
 
             lock (display_user_lock)
             {
-                if (displayUser == null && api?.State.Value == APIState.Online)
+                if (displayUser == null && api != null && !string.IsNullOrEmpty(api.AccessToken) && DateTimeOffset.Now - lastLookupFailure > lookup_retry_delay)
                 {
                     var request = new GetUserRequest(DISPLAY_USERNAME);
 
@@ -93,8 +102,15 @@ namespace osu.Game.Users
                         api.Perform(request);
                         displayUser = request.Response;
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Logger.Log($"Looking up {DISPLAY_USERNAME} failed: {e.Message}", LoggingTarget.Network);
+                    }
+
+                    if (displayUser == null)
+                    {
+                        lastLookupFailure = DateTimeOffset.Now;
+                        Logger.Log($"Looking up {DISPLAY_USERNAME} returned no user.", LoggingTarget.Network);
                     }
                 }
 

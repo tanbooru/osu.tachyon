@@ -15,6 +15,7 @@ using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.Profile.Header.Components;
 using osu.Game.Resources.Localisation.Web;
 using osu.Game.Rulesets;
+using osu.Game.Users.Drawables;
 using osuTK;
 
 namespace osu.Game.Users
@@ -31,6 +32,8 @@ namespace osu.Game.Users
         private GlobalRankDisplay globalRankDisplay = null!;
         private ProfileValueDisplay countryRankDisplay = null!;
         private LoadingLayer loadingLayer = null!;
+        private UpdateableAvatar avatar = null!;
+        private bool avatarRefreshed;
 
         public UserRankPanel(APIUser user)
             : base(user)
@@ -66,7 +69,17 @@ namespace osu.Game.Users
             ruleset.BindValueChanged(_ => updateDisplay(), true);
         }
 
-        private void onDisplayStatisticsLoaded() => Schedule(updateDisplay);
+        private void onDisplayStatisticsLoaded() => Schedule(() =>
+        {
+            updateDisplay();
+
+            if (!avatarRefreshed && LocalUserAlias.AppliesTo(User))
+            {
+                avatarRefreshed = true;
+                avatar.User = null;
+                avatar.User = User;
+            }
+        });
 
         private void onStatisticsUpdated(UserStatisticsUpdate update)
         {
@@ -134,7 +147,7 @@ namespace osu.Game.Users
                                 {
                                     new Drawable[]
                                     {
-                                        CreateAvatar().With(avatar =>
+                                        avatar = CreateAvatar().With(avatar =>
                                         {
                                             avatar.Size = new Vector2(60);
                                             avatar.Masking = true;
