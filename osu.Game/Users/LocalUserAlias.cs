@@ -24,6 +24,15 @@ namespace osu.Game.Users
 
         public static IUser GetProfileUser(IUser user) => AppliesTo(user) ? new APIUser { Id = 0, Username = DISPLAY_USERNAME } : user;
 
+        public static int CachedDisplayUserId
+        {
+            get
+            {
+                lock (display_user_lock)
+                    return displayUser?.Id ?? -1;
+            }
+        }
+
         public static IUser? GetDisplayUser(IUser? user, IAPIProvider? api)
         {
             if (!AppliesTo(user))

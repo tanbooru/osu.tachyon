@@ -9,6 +9,7 @@ using osu.Game.Models;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Leaderboards;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Users;
 using Realms;
 
 namespace osu.Game.Scoring
@@ -18,7 +19,7 @@ namespace osu.Game.Scoring
         /// <summary>
         /// A user-presentable display title representing this score.
         /// </summary>
-        public static string GetDisplayTitle(this IScoreInfo scoreInfo) => $"{scoreInfo.User.Username} playing {scoreInfo.Beatmap?.GetDisplayTitle() ?? "unknown"}";
+        public static string GetDisplayTitle(this IScoreInfo scoreInfo) => $"{LocalUserAlias.GetDisplayUsername(scoreInfo.User)} playing {scoreInfo.Beatmap?.GetDisplayTitle() ?? "unknown"}";
 
         /// <summary>
         /// Orders an array of <see cref="ScoreInfo"/>s by total score.

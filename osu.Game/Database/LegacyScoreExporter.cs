@@ -8,6 +8,8 @@ using osu.Framework.Platform;
 using osu.Game.Extensions;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Scoring;
+using osu.Game.Scoring.Legacy;
+using osu.Game.Users;
 
 namespace osu.Game.Database
 {
@@ -35,7 +37,12 @@ namespace osu.Game.Database
                 return;
 
             using (var inputStream = UserFileStorage.GetStream(file.File.GetStoragePath()))
-                inputStream.CopyTo(outputStream);
+            {
+                if (LocalUserAlias.AppliesTo(model.User))
+                    LegacyScoreUserRewriter.Rewrite(inputStream, outputStream, LocalUserAlias.DISPLAY_USERNAME, LocalUserAlias.CachedDisplayUserId);
+                else
+                    inputStream.CopyTo(outputStream);
+            }
         }
     }
 }
