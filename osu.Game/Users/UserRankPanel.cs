@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online;
+using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.Profile.Header.Components;
 using osu.Game.Resources.Localisation.Web;
@@ -50,6 +51,9 @@ namespace osu.Game.Users
         [Resolved]
         private IBindable<RulesetInfo> ruleset { get; set; } = null!;
 
+        [Resolved]
+        private IAPIProvider api { get; set; } = null!;
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
@@ -57,8 +61,12 @@ namespace osu.Game.Users
             if (statisticsProvider != null)
                 statisticsProvider.StatisticsUpdated += onStatisticsUpdated;
 
+            LocalUserAlias.DisplayStatisticsLoaded += onDisplayStatisticsLoaded;
+
             ruleset.BindValueChanged(_ => updateDisplay(), true);
         }
+
+        private void onDisplayStatisticsLoaded() => Schedule(updateDisplay);
 
         private void onStatisticsUpdated(UserStatisticsUpdate update)
         {
@@ -68,7 +76,9 @@ namespace osu.Game.Users
 
         private void updateDisplay()
         {
-            var statistics = statisticsProvider?.GetStatisticsFor(ruleset.Value);
+            var statistics = LocalUserAlias.AppliesTo(User)
+                ? LocalUserAlias.GetDisplayStatistics(ruleset.Value, api)
+                : statisticsProvider?.GetStatisticsFor(ruleset.Value);
 
             loadingLayer.State.Value = statistics == null ? Visibility.Visible : Visibility.Hidden;
 
@@ -234,6 +244,8 @@ namespace osu.Game.Users
         {
             if (statisticsProvider.IsNotNull())
                 statisticsProvider.StatisticsUpdated -= onStatisticsUpdated;
+
+            LocalUserAlias.DisplayStatisticsLoaded -= onDisplayStatisticsLoaded;
 
             base.Dispose(isDisposing);
         }

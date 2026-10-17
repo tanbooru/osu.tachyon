@@ -116,6 +116,7 @@ namespace osu.Desktop
 
             multiplayerClient.RoomUpdated += onRoomUpdated;
             statisticsProvider.StatisticsUpdated += onStatisticsUpdated;
+            LocalUserAlias.DisplayStatisticsLoaded += schedulePresenceUpdate;
         }
 
         private void onReady(object _, ReadyMessage __)
@@ -229,8 +230,10 @@ namespace osu.Desktop
                 presence.Assets.LargeImageText = string.Empty;
             else
             {
-                var statistics = statisticsProvider.GetStatisticsFor(ruleset.Value);
-                presence.Assets.LargeImageText = $"{user.Value.Username}" + (statistics?.GlobalRank > 0 ? $" (rank #{statistics.GlobalRank:N0})" : string.Empty);
+                var statistics = LocalUserAlias.AppliesTo(user.Value)
+                    ? LocalUserAlias.GetDisplayStatistics(ruleset.Value, api)
+                    : statisticsProvider.GetStatisticsFor(ruleset.Value);
+                presence.Assets.LargeImageText = $"{LocalUserAlias.GetDisplayUsername(user.Value)}" + (statistics?.GlobalRank > 0 ? $" (rank #{statistics.GlobalRank:N0})" : string.Empty);
             }
 
             // small image
@@ -332,6 +335,8 @@ namespace osu.Desktop
 
             if (statisticsProvider.IsNotNull())
                 statisticsProvider.StatisticsUpdated -= onStatisticsUpdated;
+
+            LocalUserAlias.DisplayStatisticsLoaded -= schedulePresenceUpdate;
 
             client.Dispose();
             base.Dispose(isDisposing);
