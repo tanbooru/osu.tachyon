@@ -90,7 +90,7 @@ namespace osu.Game.Overlays
             if (userToShow.OnlineID == APIUser.SYSTEM_USER_ID)
                 return;
 
-            user = userToShow;
+            user = LocalUserAlias.GetProfileUser(userToShow);
             ruleset = userRuleset;
 
             Show();

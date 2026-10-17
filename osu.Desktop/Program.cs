@@ -3,9 +3,7 @@
 
 using System;
 using System.IO;
-using System.Runtime.Versioning;
 using osu.Desktop.LegacyIpc;
-using osu.Desktop.Windows;
 using osu.Framework;
 using osu.Framework.Development;
 using osu.Framework.Logging;
@@ -104,7 +102,7 @@ namespace osu.Desktop
 
             var hostOptions = new HostOptions
             {
-                IPCPipeName = !tournamentClient ? OsuGame.IPC_PIPE_NAME : null,
+                IPCPipeName = !tournamentClient ? $"{OsuGame.IPC_PIPE_NAME}-tachyon" : null,
                 FriendlyGameName = OsuGameBase.GAME_NAME,
             };
 
@@ -203,18 +201,7 @@ namespace osu.Desktop
 
             app.OnFirstRun(_ => isFirstRun = true);
 
-            if (OperatingSystem.IsWindows())
-                configureWindows(app);
-
             app.Run();
-        }
-
-        [SupportedOSPlatform("windows")]
-        private static void configureWindows(VelopackApp app)
-        {
-            app.OnFirstRun(_ => WindowsAssociationManager.InstallAssociations());
-            app.OnAfterUpdateFastCallback(_ => WindowsAssociationManager.UpdateAssociations());
-            app.OnBeforeUninstallFastCallback(_ => WindowsAssociationManager.UninstallAssociations());
         }
     }
 }
