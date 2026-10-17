@@ -142,7 +142,7 @@ namespace osu.Game.Screens.Play
 
                 bool shouldExit = ShouldExitOnTokenRetrievalFailure(exception);
 
-                if (displayNotification || shouldExit)
+                if (shouldExit)
                 {
                     string whatWillHappen = shouldExit
                         ? "Cannot start play"

@@ -121,14 +121,6 @@ namespace osu.Game.Online
 
         private void notifyApiDisconnection()
         {
-            if (userNotified) return;
-
-            userNotified = true;
-            notificationOverlay?.Post(new SimpleErrorNotification
-            {
-                Icon = FontAwesome.Solid.ExclamationCircle,
-                Text = NotificationsStrings.APIConnectionInterrupted,
-            });
         }
 
         private void notifyAboutForcedDisconnection()
